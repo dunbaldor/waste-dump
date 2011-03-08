@@ -1,0 +1,28 @@
+From 7a3b06456fa7ba79857f434b5f79b11550d936c7 Mon Sep 17 00:00:00 2001
+From: Dunbaldor <dunbaldor@gmail.com>
+Date: Tue, 8 Mar 2011 23:46:30 +0100
+Subject: [PATCH] Fix Quest 12570 / Mantis Entry #3520
+
+---
+ scripts/northrend/sholazar_basin.cpp |    5 +++++
+ 1 files changed, 5 insertions(+), 0 deletions(-)
+
+diff --git a/scripts/northrend/sholazar_basin.cpp b/scripts/northrend/sholazar_basin.cpp
+index b1ed30e..23efd3c 100644
+--- a/scripts/northrend/sholazar_basin.cpp
++++ b/scripts/northrend/sholazar_basin.cpp
+@@ -91,6 +91,11 @@ struct MANGOS_DLL_DECL npc_injured_rainspeakerAI : public npc_escortAI
+                 m_creature->GetNearPoint(m_creature, fX, fY, fZ, 0.0f, 15.0f, fAngle);
+ 
+                 m_creature->SummonCreature(NPC_FRENZYHEART_TRACKER, fX, fY, fZ, m_creature->GetOrientation(), TEMPSUMMON_TIMED_DESPAWN, 30000);
++
++				 Player* pPlayer = GetPlayerForEscort();
++                    if (pPlayer)
++                        pPlayer->GroupEventHappens(QUEST_FORTUNATE_MISUNDERSTAND, m_creature);
++
+                 break;
+             }
+         }
+-- 
+1.7.2.3.msysgit.0
+

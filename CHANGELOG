@@ -1,3 +1,4 @@
 Just for the record:
 
 [WD1] mangchat Patch for mangos with CMake Support (needs review)
+[WD2] simple fix for http://mantis.orangevir.us/view.php?id=3520 (not perfect now)
