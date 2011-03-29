@@ -1,0 +1,129 @@
+From 01d461b7769c3e09c2476607ad7b9a2ddb07fc75 Mon Sep 17 00:00:00 2001
+From: Dunbaldor <dunbaldor@gmail.com>
+Date: Tue, 29 Mar 2011 20:22:20 +0200
+Subject: [PATCH] ugly Hackfix, pls revert ASAP!
+
+Signed-off-by: Dunbaldor <dunbaldor@gmail.com>
+---
+ VC100/100ScriptDev2.vcxproj                        |    2 ++
+ VC100/100ScriptDev2.vcxproj.filters                |    6 ++++++
+ .../nexus/eye_of_eternity/boss_malygos.cpp         |    8 +++++---
+ system/ScriptLoader.cpp                            |    4 ++--
+ 4 files changed, 15 insertions(+), 5 deletions(-)
+
+diff --git a/VC100/100ScriptDev2.vcxproj b/VC100/100ScriptDev2.vcxproj
+index 3c50c26..991054f 100644
+--- a/VC100/100ScriptDev2.vcxproj
++++ b/VC100/100ScriptDev2.vcxproj
+@@ -630,6 +630,7 @@
+     <ClCompile Include="..\scripts\northrend\violet_hold\instance_violet_hold.cpp" />
+     <ClCompile Include="..\scripts\northrend\violet_hold\violet_hold.cpp" />
+     <ClCompile Include="..\scripts\northrend\zuldrak.cpp" />
++    <ClCompile Include="..\scripts\outdoor_pvp\eastern_kingdoms\outdoor_pvp_eastern_plaguelands.cpp" />
+     <ClCompile Include="..\scripts\outdoor_pvp\outdoor_pvp_eastern_kingdoms.cpp" />
+     <ClCompile Include="..\scripts\outdoor_pvp\outdoor_pvp_kalimdor.cpp" />
+     <ClCompile Include="..\scripts\outdoor_pvp\outdoor_pvp_northrend.cpp" />
+@@ -803,6 +804,7 @@
+     <ClInclude Include="..\scripts\northrend\utgarde_keep\utgarde_pinnacle\utgarde_pinnacle.h" />
+     <ClInclude Include="..\scripts\northrend\vault_of_archavon\vault_of_archavon.h" />
+     <ClInclude Include="..\scripts\northrend\violet_hold\violet_hold.h" />
++    <ClInclude Include="..\scripts\outdoor_pvp\eastern_kingdoms\outdoor_pvp_eastern_plaguelands.h" />
+     <ClInclude Include="..\scripts\outdoor_pvp\outdoor_pvp_eastern_kingdoms.h" />
+     <ClInclude Include="..\scripts\outdoor_pvp\outdoor_pvp_kalimdor.h" />
+     <ClInclude Include="..\scripts\outdoor_pvp\outdoor_pvp_northrend.h" />
+diff --git a/VC100/100ScriptDev2.vcxproj.filters b/VC100/100ScriptDev2.vcxproj.filters
+index 2822784..fbf4ade 100644
+--- a/VC100/100ScriptDev2.vcxproj.filters
++++ b/VC100/100ScriptDev2.vcxproj.filters
+@@ -2044,6 +2044,9 @@
+     <ClCompile Include="..\scripts\outdoor_pvp\outdoor_pvp_outland.cpp">
+       <Filter>scripts\OutdoorPvP</Filter>
+     </ClCompile>
++    <ClCompile Include="..\scripts\outdoor_pvp\eastern_kingdoms\outdoor_pvp_eastern_plaguelands.cpp">
++      <Filter>scripts\OutdoorPvP</Filter>
++    </ClCompile>
+   </ItemGroup>
+   <ItemGroup>
+     <ClInclude Include="..\base\escort_ai.h">
+@@ -2345,6 +2348,9 @@
+     <ClInclude Include="..\scripts\outdoor_pvp\outdoor_pvp_zone_selector.h">
+       <Filter>scripts\OutdoorPvP</Filter>
+     </ClInclude>
++    <ClInclude Include="..\scripts\outdoor_pvp\eastern_kingdoms\outdoor_pvp_eastern_plaguelands.h">
++      <Filter>scripts\OutdoorPvP</Filter>
++    </ClInclude>
+   </ItemGroup>
+   <ItemGroup>
+     <CustomBuild Include="..\revision.h" />
+diff --git a/scripts/northrend/nexus/eye_of_eternity/boss_malygos.cpp b/scripts/northrend/nexus/eye_of_eternity/boss_malygos.cpp
+index 0f4f925..d389c61 100644
+--- a/scripts/northrend/nexus/eye_of_eternity/boss_malygos.cpp
++++ b/scripts/northrend/nexus/eye_of_eternity/boss_malygos.cpp
+@@ -392,7 +392,7 @@ struct MANGOS_DLL_DECL boss_malygosAI : public ScriptedAI
+             pSummoned->ForcedDespawn(30000);
+         }
+ 
+-        if (uiEntry == NPC_NEXUS_LORD || uiEntry == NPC_SCION_OF_ETERNITY)
++        if (/*uiEntry == NPC_NEXUS_LORD ||*/ uiEntry == NPC_SCION_OF_ETERNITY)
+         {
+             if (Creature* pDisk = pSummoned->SummonCreature(NPC_HOVER_DISK, pSummoned->GetPositionX(), pSummoned->GetPositionY(), pSummoned->GetPositionZ(), 0, TEMPSUMMON_CORPSE_DESPAWN, 0))
+             {
+@@ -509,7 +509,7 @@ struct MANGOS_DLL_DECL boss_malygosAI : public ScriptedAI
+             if (m_uiSubPhase == SUBPHASE_TALK)
+             {
+                 DoScriptText(SAY_AGGRO2, m_creature);
+-                m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
++                /*m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);*/
+                 AntiMagicShell();
+                 m_uiShellTimer = urand(15000, 17000);
+                 m_uiSubPhase = 0;
+@@ -775,6 +775,7 @@ struct MANGOS_DLL_DECL boss_malygosAI : public ScriptedAI
+                 if (m_creature->GetHealthPercent() <= 50.0f)
+                 {
+                     m_creature->InterruptNonMeleeSpells(true);
++                    m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
+                     DoScriptText(SAY_END_PHASE1, m_creature);
+                     DespawnCreatures(NPC_POWER_SPARK);
+                     m_uiPhase = PHASE_ADDS;
+@@ -1172,6 +1173,7 @@ struct MANGOS_DLL_DECL npc_nexus_lordAI : public ScriptedAI
+         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
+             return;
+ 
++        /*
+         if (VehicleKit* pDiskVehicle = m_creature->GetVehicle())
+         {
+             if (Unit* pDiskUnit = pDiskVehicle->GetBase())
+@@ -1212,7 +1214,7 @@ struct MANGOS_DLL_DECL npc_nexus_lordAI : public ScriptedAI
+                         m_uiCheckTimer -= uiDiff;
+                 }
+             }
+-        }
++        }*/
+ 
+         if (m_uiArcaneShockTimer <= uiDiff)
+         {
+diff --git a/system/ScriptLoader.cpp b/system/ScriptLoader.cpp
+index d1ba01b..6945343 100644
+--- a/system/ScriptLoader.cpp
++++ b/system/ScriptLoader.cpp
+@@ -20,7 +20,7 @@ extern void AddSC_outdoor_pvp_outland();
+ 
+ // OutdoorPvP zone scripts
+ extern void AddSC_outdoor_pvp_eastern_plaguelands();
+-extern void AddSC_outdoor_pvp_silithus();
++//extern void AddSC_outdoor_pvp_silithus();
+ 
+ //examples
+ extern void AddSC_example_creature();
+@@ -547,7 +547,7 @@ void AddScripts()
+     // OutdoorPvP zone scripts
+     // Must be _before_ map scripts call!
+     AddSC_outdoor_pvp_eastern_plaguelands();
+-    AddSC_outdoor_pvp_silithus();
++    //AddSC_outdoor_pvp_silithus();
+ 
+     // OutdoorPvP
+     AddSC_outdoor_pvp_eastern_kingdoms();
+-- 
+1.7.2.3.msysgit.0
+
