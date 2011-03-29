@@ -1,0 +1,141 @@
+From 0e10270be4833ee1b8a8a2504257666d16f05d9a Mon Sep 17 00:00:00 2001
+From: Dunbaldor <dunbaldor@gmail.com>
+Date: Tue, 29 Mar 2011 17:36:05 +0200
+Subject: [PATCH] [IOV83]Make Malygos Adds Attackable & Update Visual Studio Project Files
+
+Signed-off-by: Dunbaldor <dunbaldor@gmail.com>
+---
+ VC100/100ScriptDev2.vcxproj                        |   11 +++++++
+ VC100/100ScriptDev2.vcxproj.filters                |   30 ++++++++++++++++++++
+ .../nexus/eye_of_eternity/boss_malygos.cpp         |    1 +
+ system/ScriptLoader.cpp                            |    4 +-
+ 4 files changed, 44 insertions(+), 2 deletions(-)
+
+diff --git a/VC100/100ScriptDev2.vcxproj b/VC100/100ScriptDev2.vcxproj
+index 679583b..3c50c26 100644
+--- a/VC100/100ScriptDev2.vcxproj
++++ b/VC100/100ScriptDev2.vcxproj
+@@ -107,6 +107,8 @@
+       <StringPooling>true</StringPooling>
+       <FunctionLevelLinking>true</FunctionLevelLinking>
+       <RuntimeTypeInfo>true</RuntimeTypeInfo>
++      <MultiProcessorCompilation>true</MultiProcessorCompilation>
++      <AdditionalOptions>/Zm112 %(AdditionalOptions)</AdditionalOptions>
+     </ClCompile>
+     <Link>
+       <AdditionalDependencies>mangosd.lib;ACEd.lib;framework.lib;%(AdditionalDependencies)</AdditionalDependencies>
+@@ -628,6 +630,10 @@
+     <ClCompile Include="..\scripts\northrend\violet_hold\instance_violet_hold.cpp" />
+     <ClCompile Include="..\scripts\northrend\violet_hold\violet_hold.cpp" />
+     <ClCompile Include="..\scripts\northrend\zuldrak.cpp" />
++    <ClCompile Include="..\scripts\outdoor_pvp\outdoor_pvp_eastern_kingdoms.cpp" />
++    <ClCompile Include="..\scripts\outdoor_pvp\outdoor_pvp_kalimdor.cpp" />
++    <ClCompile Include="..\scripts\outdoor_pvp\outdoor_pvp_northrend.cpp" />
++    <ClCompile Include="..\scripts\outdoor_pvp\outdoor_pvp_outland.cpp" />
+     <ClCompile Include="..\scripts\outland\blades_edge_mountains.cpp" />
+     <ClCompile Include="..\scripts\outland\boss_doomlord_kazzak.cpp" />
+     <ClCompile Include="..\scripts\outland\boss_doomwalker.cpp" />
+@@ -797,6 +803,11 @@
+     <ClInclude Include="..\scripts\northrend\utgarde_keep\utgarde_pinnacle\utgarde_pinnacle.h" />
+     <ClInclude Include="..\scripts\northrend\vault_of_archavon\vault_of_archavon.h" />
+     <ClInclude Include="..\scripts\northrend\violet_hold\violet_hold.h" />
++    <ClInclude Include="..\scripts\outdoor_pvp\outdoor_pvp_eastern_kingdoms.h" />
++    <ClInclude Include="..\scripts\outdoor_pvp\outdoor_pvp_kalimdor.h" />
++    <ClInclude Include="..\scripts\outdoor_pvp\outdoor_pvp_northrend.h" />
++    <ClInclude Include="..\scripts\outdoor_pvp\outdoor_pvp_outland.h" />
++    <ClInclude Include="..\scripts\outdoor_pvp\outdoor_pvp_zone_selector.h" />
+     <ClInclude Include="..\scripts\outland\auchindoun\sethekk_halls\sethekk_halls.h" />
+     <ClInclude Include="..\scripts\outland\auchindoun\shadow_labyrinth\shadow_labyrinth.h" />
+     <ClInclude Include="..\scripts\outland\black_temple\black_temple.h" />
+diff --git a/VC100/100ScriptDev2.vcxproj.filters b/VC100/100ScriptDev2.vcxproj.filters
+index 8956d07..2822784 100644
+--- a/VC100/100ScriptDev2.vcxproj.filters
++++ b/VC100/100ScriptDev2.vcxproj.filters
+@@ -298,6 +298,9 @@
+     <Filter Include="scripts\northrend\ruby_sanctum">
+       <UniqueIdentifier>{e35abead-2389-4eb9-88bd-70e6fe5636b5}</UniqueIdentifier>
+     </Filter>
++    <Filter Include="scripts\OutdoorPvP">
++      <UniqueIdentifier>{543b2d59-7b84-48d4-96f9-6a9ac39159f3}</UniqueIdentifier>
++    </Filter>
+   </ItemGroup>
+   <ItemGroup>
+     <ClCompile Include="..\base\escort_ai.cpp">
+@@ -2029,6 +2032,18 @@
+     <ClCompile Include="..\scripts\northrend\ulduar\ulduar\boss_xt_002.cpp">
+       <Filter>scripts\northrend\ulduar\ulduar</Filter>
+     </ClCompile>
++    <ClCompile Include="..\scripts\outdoor_pvp\outdoor_pvp_eastern_kingdoms.cpp">
++      <Filter>scripts\OutdoorPvP</Filter>
++    </ClCompile>
++    <ClCompile Include="..\scripts\outdoor_pvp\outdoor_pvp_kalimdor.cpp">
++      <Filter>scripts\OutdoorPvP</Filter>
++    </ClCompile>
++    <ClCompile Include="..\scripts\outdoor_pvp\outdoor_pvp_northrend.cpp">
++      <Filter>scripts\OutdoorPvP</Filter>
++    </ClCompile>
++    <ClCompile Include="..\scripts\outdoor_pvp\outdoor_pvp_outland.cpp">
++      <Filter>scripts\OutdoorPvP</Filter>
++    </ClCompile>
+   </ItemGroup>
+   <ItemGroup>
+     <ClInclude Include="..\base\escort_ai.h">
+@@ -2315,6 +2330,21 @@
+     <ClInclude Include="..\scripts\northrend\icecrown_citadel\icecrown_citadel\icecrown_citadel.h">
+       <Filter>scripts\northrend\icecrown_citadel\icecrown_citadel</Filter>
+     </ClInclude>
++    <ClInclude Include="..\scripts\outdoor_pvp\outdoor_pvp_eastern_kingdoms.h">
++      <Filter>scripts\OutdoorPvP</Filter>
++    </ClInclude>
++    <ClInclude Include="..\scripts\outdoor_pvp\outdoor_pvp_kalimdor.h">
++      <Filter>scripts\OutdoorPvP</Filter>
++    </ClInclude>
++    <ClInclude Include="..\scripts\outdoor_pvp\outdoor_pvp_northrend.h">
++      <Filter>scripts\OutdoorPvP</Filter>
++    </ClInclude>
++    <ClInclude Include="..\scripts\outdoor_pvp\outdoor_pvp_outland.h">
++      <Filter>scripts\OutdoorPvP</Filter>
++    </ClInclude>
++    <ClInclude Include="..\scripts\outdoor_pvp\outdoor_pvp_zone_selector.h">
++      <Filter>scripts\OutdoorPvP</Filter>
++    </ClInclude>
+   </ItemGroup>
+   <ItemGroup>
+     <CustomBuild Include="..\revision.h" />
+diff --git a/scripts/northrend/nexus/eye_of_eternity/boss_malygos.cpp b/scripts/northrend/nexus/eye_of_eternity/boss_malygos.cpp
+index 43a25c7..0f4f925 100644
+--- a/scripts/northrend/nexus/eye_of_eternity/boss_malygos.cpp
++++ b/scripts/northrend/nexus/eye_of_eternity/boss_malygos.cpp
+@@ -404,6 +404,7 @@ struct MANGOS_DLL_DECL boss_malygosAI : public ScriptedAI
+                     pSummoned->EnterVehicle(pDiskVehicle, 0);
+             }
+             pSummoned->SetInCombatWithZone();
++            pSummoned->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
+         }
+     }
+ 
+diff --git a/system/ScriptLoader.cpp b/system/ScriptLoader.cpp
+index f946c77..d1ba01b 100644
+--- a/system/ScriptLoader.cpp
++++ b/system/ScriptLoader.cpp
+@@ -543,7 +543,7 @@ void AddScripts()
+     //custom
+     AddSC_npc_arena_honor();
+     AddSC_mob_teleguy();
+-
++    
+     // OutdoorPvP zone scripts
+     // Must be _before_ map scripts call!
+     AddSC_outdoor_pvp_eastern_plaguelands();
+@@ -554,7 +554,7 @@ void AddScripts()
+     AddSC_outdoor_pvp_kalimdor();
+     AddSC_outdoor_pvp_northrend();
+     AddSC_outdoor_pvp_outland();
+-
++    
+     //examples
+     AddSC_example_creature();
+     AddSC_example_escort();
+-- 
+1.7.2.3.msysgit.0
+
