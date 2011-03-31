@@ -1,0 +1,48 @@
+From 1af5c7b9267b593a5ece88a70ce565ce68cc02ad Mon Sep 17 00:00:00 2001
+From: Dunbaldor <dunbaldor@gmail.com>
+Date: Thu, 31 Mar 2011 19:24:24 +0200
+Subject: [PATCH] CoreSupport for Hover Disks in Eye of Eternity
+
+Signed-off-by: Dunbaldor <dunbaldor@gmail.com>
+---
+ src/game/Unit.cpp |   15 +++++++++++++--
+ 1 files changed, 13 insertions(+), 2 deletions(-)
+
+diff --git a/src/game/Unit.cpp b/src/game/Unit.cpp
+index a3a363a..bcedf3d 100644
+--- a/src/game/Unit.cpp
++++ b/src/game/Unit.cpp
+@@ -2812,7 +2812,7 @@ void Unit::CalculateHealAbsorb(const uint32 heal, uint32 *absorb)
+ 
+ void Unit::AttackerStateUpdate (Unit *pVictim, WeaponAttackType attType, bool extra )
+ {
+-    if(hasUnitState(UNIT_STAT_CAN_NOT_REACT) || HasFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_PACIFIED) )
++    if((hasUnitState(UNIT_STAT_CAN_NOT_REACT) || HasFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_PACIFIED)) && (this->GetVehicle()->GetVehicleId() != 223) )
+         return;
+ 
+     if (!pVictim->isAlive())
+@@ -6101,9 +6101,20 @@ bool Unit::Attack(Unit *victim, bool meleeAttack)
+         return false;
+ 
+     // player cannot attack while mounted or in vehicle
+-    if(GetTypeId()==TYPEID_PLAYER && (IsMounted() || GetVehicle()))
++    if(GetTypeId()==TYPEID_PLAYER && IsMounted())
+         return false;
+ 
++    if(GetTypeId()==TYPEID_PLAYER && GetVehicle())
++    {
++        switch(this->GetVehicle()->GetVehicleId())
++        {
++        case 223:
++            break;
++        default:
++            return false;
++        }
++    }
++
+     // nobody can attack GM in GM-mode
+     if(victim->GetTypeId()==TYPEID_PLAYER)
+     {
+-- 
+1.7.2.3.msysgit.0
+
