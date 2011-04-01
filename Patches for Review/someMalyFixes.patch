@@ -1,0 +1,121 @@
+From b2ca59c9b1f116c3bf97845ba79331bdc482e937 Mon Sep 17 00:00:00 2001
+From: Dunbaldor <dunbaldor@gmail.com>
+Date: Fri, 1 Apr 2011 16:30:40 +0200
+Subject: [PATCH] Fix DOT-Bug in Malygos ENcounter & do some Target Hacking
+
+Signed-off-by: Dunbaldor <dunbaldor@gmail.com>
+Add Achievement "Denyin' the Scion"
+
+Signed-off-by: Dunbaldor <dunbaldor@gmail.com>
+---
+ .../nexus/eye_of_eternity/boss_malygos.cpp         |   35 +++++++++++++++++---
+ .../eye_of_eternity/instance_eye_of_eternity.cpp   |    1 +
+ 2 files changed, 31 insertions(+), 5 deletions(-)
+
+diff --git a/scripts/northrend/nexus/eye_of_eternity/boss_malygos.cpp b/scripts/northrend/nexus/eye_of_eternity/boss_malygos.cpp
+index 0f4f925..f837072 100644
+--- a/scripts/northrend/nexus/eye_of_eternity/boss_malygos.cpp
++++ b/scripts/northrend/nexus/eye_of_eternity/boss_malygos.cpp
+@@ -166,7 +166,10 @@ enum
+ 
+     //hacks
+     SPELL_FLIGHT                    = 59553,
+-    MODEL_ID_INVISIBLE              = 11686
++    MODEL_ID_INVISIBLE              = 11686,
++
++    ACHIEV_DENYIN_THE_SCION_10      = 2148,
++    ACHIEV_DENYIN_THE_SCION_25      = 2149
+ };
+ 
+ struct LocationsXY
+@@ -508,8 +511,7 @@ struct MANGOS_DLL_DECL boss_malygosAI : public ScriptedAI
+             m_bReadyForWPMove = true;
+             if (m_uiSubPhase == SUBPHASE_TALK)
+             {
+-                DoScriptText(SAY_AGGRO2, m_creature);
+-                m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
++                DoScriptText(SAY_AGGRO2, m_creature);                
+                 AntiMagicShell();
+                 m_uiShellTimer = urand(15000, 17000);
+                 m_uiSubPhase = 0;
+@@ -775,6 +777,7 @@ struct MANGOS_DLL_DECL boss_malygosAI : public ScriptedAI
+                 if (m_creature->GetHealthPercent() <= 50.0f)
+                 {
+                     m_creature->InterruptNonMeleeSpells(true);
++                    m_creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
+                     DoScriptText(SAY_END_PHASE1, m_creature);
+                     DespawnCreatures(NPC_POWER_SPARK);
+                     m_uiPhase = PHASE_ADDS;
+@@ -1155,7 +1158,7 @@ struct MANGOS_DLL_DECL npc_nexus_lordAI : public ScriptedAI
+     uint32 m_uiCheckTimer;
+     uint32 m_uiArcaneShockTimer;
+     uint32 m_uiHasteTimer;
+-
++ 
+     void Reset()
+     {
+         m_uiCheckTimer = 0;
+@@ -1165,10 +1168,13 @@ struct MANGOS_DLL_DECL npc_nexus_lordAI : public ScriptedAI
+         m_fVehicleOldY = 0.0f;
+         m_uiArcaneShockTimer = urand(8000, 9000);
+         m_uiHasteTimer = urand(10000, 12000);
++        m_creature->clearUnitState(UNIT_STAT_CAN_NOT_REACT);
+     }
+ 
+     void UpdateAI(const uint32 uiDiff)
+     {
++
++            
+         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
+             return;
+ 
+@@ -1187,7 +1193,14 @@ struct MANGOS_DLL_DECL npc_nexus_lordAI : public ScriptedAI
+                 m_fVehicleOldX = fX;
+                 m_fVehicleOldY = fY;
+ 
+-                Unit* pTarget = m_creature->getVictim();
++                Unit* pTarget = NULL;
++
++                //We want to attack the Player on the Disc and not the Disc itself
++                if(m_creature->getVictim()->GetEntry() == 30248)
++                    pTarget = m_creature->getVictim()->GetVehicle()->GetPassenger(0);
++                else
++                    pTarget = m_creature->getVictim();
++
+                 if (m_creature->IsWithinDistInMap(pTarget, 4.0f))
+                 {
+                     pDisk->GetMotionMaster()->Clear();
+@@ -1254,6 +1267,18 @@ struct MANGOS_DLL_DECL npc_scion_of_eternityAI : public ScriptedAI
+         m_uiArcaneBarrageTimer = urand(4000, 12000);
+     }
+ 
++    void JustDied(Unit* killer)
++    {
++        if(killer->GetVehicle())
++        {
++            AchievementEntry const *AchievDenySc = GetAchievementStore()->LookupEntry(m_bIsRegularMode ? ACHIEV_DENYIN_THE_SCION_10 : ACHIEV_DENYIN_THE_SCION_25);
++            Player* pPlayer = (Player*)killer;
++            pPlayer->CompletedAchievement(AchievDenySc);
++            
++                
++        }
++    }
++
+     void UpdateAI(const uint32 uiDiff)
+     {
+         if (!m_creature->SelectHostileTarget() || !m_creature->getVictim())
+diff --git a/scripts/northrend/nexus/eye_of_eternity/instance_eye_of_eternity.cpp b/scripts/northrend/nexus/eye_of_eternity/instance_eye_of_eternity.cpp
+index 01296b9..91abbce 100644
+--- a/scripts/northrend/nexus/eye_of_eternity/instance_eye_of_eternity.cpp
++++ b/scripts/northrend/nexus/eye_of_eternity/instance_eye_of_eternity.cpp
+@@ -190,6 +190,7 @@ struct MANGOS_DLL_DECL instance_eye_of_eternity : public ScriptedInstance
+         }
+         return 0;
+     }
++
+ };
+ 
+ InstanceData* GetInstanceData_instance_eye_of_eternity(Map* pMap)
+-- 
+1.7.2.3.msysgit.0
+
