@@ -1,0 +1,62 @@
+From 5052669219de5281d398d7004b0557ced9935037 Mon Sep 17 00:00:00 2001
+From: Dunbaldor <dunbaldor@gmail.com>
+Date: Mon, 25 Apr 2011 03:31:23 +0200
+Subject: [PATCH] Fix DoT @ Maly Phase 3
+
+---
+ src/game/SpellEffects.cpp |   18 ++++++++++++++++++
+ 1 files changed, 18 insertions(+), 0 deletions(-)
+
+diff --git a/src/game/SpellEffects.cpp b/src/game/SpellEffects.cpp
+index dee0157..e936f19 100644
+--- a/src/game/SpellEffects.cpp
++++ b/src/game/SpellEffects.cpp
+@@ -541,6 +541,8 @@ void Spell::EffectSchoolDMG(SpellEffectIndex effect_idx)
+                             damage = 0;
+                         break;
+ 					}
++
++
+                 }
+                 break;
+             }
+@@ -3627,6 +3629,7 @@ void Spell::EffectTriggerSpell(SpellEffectIndex effIndex)
+                 pet->CastSpell(pet, 28305, true);
+             return;
+         }
++
+         // Glyph of Mirror Image
+         case 58832:
+         {
+@@ -3967,6 +3970,13 @@ void Spell::EffectApplyAura(SpellEffectIndex eff_idx)
+     if(!unitTarget)
+         return;
+ 
++//Engulf in Flames
++    if(m_spellInfo->Id == 56092)
++    {
++        m_caster->CastSpell(unitTarget, 61621, true, NULL, NULL, m_caster->GetObjectGuid());
++        return;
++    }
++
+     // ghost spell check, allow apply any auras at player loading in ghost mode (will be cleanup after load)
+     if ( (!unitTarget->isAlive() && !(IsDeathOnlySpell(m_spellInfo) || IsDeathPersistentSpell(m_spellInfo))) &&
+         (unitTarget->GetTypeId() != TYPEID_PLAYER || !((Player*)unitTarget)->GetSession()->PlayerLoading()) )
+@@ -7815,6 +7825,14 @@ void Spell::EffectScriptEffect(SpellEffectIndex eff_idx)
+                     unitTarget->RemoveAurasDueToSpell(m_spellInfo->CalculateSimpleValue(eff_idx));
+                     break;
+                 }
++                case 56092: //Engulf in Flames
++                {
++                    if(!unitTarget)
++                        return;
++
++                    unitTarget->CastSpell(unitTarget, 38353, true, NULL, NULL, m_caster->GetObjectGuid());
++                    return;
++                }
+                 case 57337:                                 // Great Feast
+                 {
+                     if (!unitTarget)
+-- 
+1.7.2.3.msysgit.0
+
